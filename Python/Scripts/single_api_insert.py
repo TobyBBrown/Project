@@ -6,6 +6,7 @@ def check_id(appid):
     url = 'https://store.steampowered.com/api/appdetails/?appids=' + str(appid)
     json = requests.get(url).json()
     success = json[str(appid)]['success']
+    print(appid)
     return success
 
 
