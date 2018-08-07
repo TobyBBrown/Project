@@ -1,0 +1,89 @@
+h1 {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 4em;
+    font-weight: bold;
+}
+
+#specification {
+    position: relative;
+    border: 3px solid;
+    border-radius: 7px;
+    height: 200px;
+    width: 70%;
+    margin: auto;
+    margin-bottom: 30px;
+    font-family: Arial, sans-serif;
+
+}
+
+#top_spec {
+    position: relative;
+    border-bottom: solid;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+label {
+    margin-left: 5%;
+}
+
+#top_spec input {
+    position: relative;
+    width: 35%;
+    margin: auto;
+    text-align: center;
+}
+
+#mid_spec {
+    position: relative;
+    border-bottom: solid;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+select {
+    width: 35%;
+    margin-left: 4px;
+}
+
+#bottom_spec {
+    position: relative;
+    width: 70%;
+    margin: 0 auto;
+    padding-top: 20px;
+
+}
+
+#bottom_spec label {
+    position: relative;
+    margin: 10%;
+    margin-right: 3%;
+    font-size: 1.3em;
+}
+
+#bottom_spec input {
+    
+}
+
+#search {
+    border: transparent;
+    border-radius: 7px;
+    width: 70%;
+    margin: auto;
+    font-family: Arial, sans-serif;
+
+}
+
+#tag_input {
+    width: 99%;
+    border: 3px solid;
+    border-radius: 7px;
+    font-size: 1.5em;
+    text-align: center;
+
+}
+
+#specification input, #specification select{
+    font-size: 1.1em;
+}

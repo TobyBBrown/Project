@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>What Games Can I Run?</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="../static/style.css"
+</head>
+
+<body>
+  <h1>What Games Can I Run?</h1>
+  <div id="specification">
+      <form>
+          <div id="top_spec">
+              <label for="cpu_name">CPU:</label>
+              <input type="text" name="CPU" id="cpu_name"list="processors"
+                placeholder="CPU Name" required/>
+              <datalist id="processors">
+                  <option value="Intel core 2">
+                  <option value="AMD 9">
+              </datalist>
+              <label for="gpu_name">GPU:</label>
+              <input type="text" name="GPU" id="gpu_name" list="graphics"
+                placeholder="GPU Name" required/>
+              <datalist id="graphics">
+                  <option value="NVIDIA GTX 1060"></option>
+                  <option value="AMD 490"></option>
+              </datalist><br /><br />
+          </div>
+          <div id="mid_spec">
+              <label for="ram">RAM</label>
+              <select name="ram_num" id="ram" required>
+                  <option value="" disabled selected hidden>Choose RAM...</option>
+                  <option value="512">512 MB</option>
+                  <option value="1">1 GB</option>
+                  <option value="2">2 GB</option>
+                  <option value="4">4 GB</option>
+                  <option value="8">8 GB</option>
+                  <option value="12">12 GB</option>
+                  <option value="16">16 GB</option>
+              </select>
+              <label for="os">OS:</label>
+              <select name="os_version" id="os" required>
+                  <option value="" disabled selected hidden>Choose OS...</option>
+                  <option value="XP">Windows XP</option>
+                  <option value="Vista">Windows Vista</option>
+                  <option value="7">Windows 7</option>
+                  <option value="8">Windows 8</option>
+                  <option value="10">Windows 10</option>
+              </select><br /><br />
+          </div>
+          <div id="bottom_spec">
+              <label for="min">Minimum:</label>
+              <input type="radio" name="spec_level" id="min" value="Minimum"/>
+              <label for="rec">Recommended:</label>
+              <input type="radio" name="spec_level" value="Recommended" />
+          </div>
+
+      </form>
+  </div>
+  <div id="search">
+      <form>
+          <input type="text" name="tag_search" id="tag_input" placeholder="Input a steam tag">
+      </form>
+  </div>
+  <div id="game_results">
+      <table>
+          <thead>
+              <th>Game</th>
+              <th>Store Page</th>
+              <th>Price</th>
+          </thead>
+      </table>
+  </div>
+</body>
