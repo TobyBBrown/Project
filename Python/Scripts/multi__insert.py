@@ -1,7 +1,7 @@
 from single_api_insert import *
 import re
 
-for i in range(9500, 1000000, 10):
+for i in range(221840, 1000000, 10):
     success = check_id(i)
     if success:
         data = get_api_data(i, 'recommended')

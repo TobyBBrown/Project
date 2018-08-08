@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>What Games Can I Run?</title>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="../static/style.css"
+    <link rel="stylesheet" type="text/css" href="{{
+        url_for('static', filename='input_style.css')}}" />
 </head>
 
 <body>
@@ -16,13 +17,17 @@
               <input type="text" name="CPU" id="cpu_name"list="processors"
                 placeholder="CPU Name" required/>
               <datalist id="processors">
-                  
+                {% for cpu in cpus %}
+                    <option value="{{cpu.cpu_name}}">
+                {% endfor %}
               </datalist>
               <label for="gpu_name">GPU:</label>
               <input type="text" name="GPU" id="gpu_name" list="graphics"
                 placeholder="GPU Name" required/>
               <datalist id="graphics">
-
+                {% for gpu in gpus %}
+                    <option value="{{gpu.gpu_name}}">
+                {% endfor %}
               </datalist><br /><br />
           </div>
           <div id="mid_spec">
@@ -60,17 +65,5 @@
       <form>
           <input type="text" name="tag_search" id="tag_input" placeholder="Input a steam tag">
       </form>
-  </div>
-  <div id="game_results">
-      <table>
-          <thead>
-              <th>Game</th>
-              <th>Store Page</th>
-              <th>Price</th>
-          </thead>
-          <tbody>
-
-          </tbody>
-      </table>
   </div>
 </body>
