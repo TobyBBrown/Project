@@ -1,23 +1,29 @@
 import unittest
-from single_api_insert import get_api_data, insert
+from single_api_insert import *
 from mysql.connector import MySQLConnection, Error
 
 
 class TestSingleAPIInsert(unittest.TestCase):
 
+    def test_check_id(self):
+        true_appid = 400
+        false_appid = 529
+        self.assertEqual(True, check_id(true_appid))
+        self.assertEqual(False, check_id(false_appid))
+
     def test_insert(self):
         try:
             con = MySQLConnection(host='localhost',
-                                  database='project',
+                                  database='test',
                                   user='root',
                                   password='Katm2803')
             if con.is_connected():
                 print('Connected to database')
 
             cursor = con.cursor()
-            cursor.execute("truncate table game_requirements")  # empty table before insertion
+            cursor.execute("truncate table testapi")  # empty table before insertion
             insert(1, 'test', 'test', 'test')
-            cursor.execute("select * from game_requirements")
+            cursor.execute("select * from testapi")
             rows = cursor.fetchall()
             self.assertEqual(cursor.rowcount, 1)
 

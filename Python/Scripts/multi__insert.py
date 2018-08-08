@@ -1,7 +1,8 @@
 from single_api_insert import *
 import re
+from time import sleep
 
-for i in range(273670, 1000000, 10):
+for i in range(313510, 1000000, 10):
     success = check_id(i)
     if success:
         data = get_api_data(i, 'recommended')
@@ -25,3 +26,4 @@ for i in range(273670, 1000000, 10):
             min_specs = None
         final_data = data[0], data[1], min_specs, rec_specs
         insert(*final_data)
+    sleep(1)
