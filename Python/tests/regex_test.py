@@ -8,8 +8,8 @@ spaceSound:DirectX® compatible'''
 specs2 = '''Minimum:OS: Windows VistaProcessor: Intel Core 2 Duo E6550Memory: 3 GB RAMGraphics:
 nVidia GeForce 9400 1 Gb/Amd Radeon HD 4550 1 GbDirectX: Version 9.0cStorage: 9 GB available space'''
 
-line = 'hello mr boby'
-search = re.findall(r'.*(?=\smr)|(?<=mr\s).*', line, re.X)
+line = None
+search = re.search(r'.*', line, re.I)
 
 
 ##os = re.search(r'(?<=OS:).*(?=processor:)', specs, re.I).group()
@@ -29,7 +29,4 @@ search = re.findall(r'.*(?=\smr)|(?<=mr\s).*', line, re.X)
 ##memory = re.search(r'(?<=memory:).*(?=ram|graphics:)', specs2, re.I).group()
 ##print(re.search(r'\d', memory).group())
 
-    
 
-for i in search:
-    print(i)
