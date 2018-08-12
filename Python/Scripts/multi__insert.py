@@ -2,7 +2,7 @@ from single_api_insert import *
 import re
 from time import sleep
 
-for i in range(313510, 1000000, 10):
+for i in range(0, 920000, 10):
     success = check_id(i)
     if success:
         data = get_api_data(i, 'recommended')
