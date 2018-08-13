@@ -32,23 +32,17 @@ try:
         rec_list = []
         min_spec = game['min_specs']
         rec_spec = game['rec_specs']
-        minimum = None
-        recommended = None
-        if min_spec is not None:
-            min_obj = re.search(r'(?<=graphics:).*?(?=directx|hard|network|storage)', min_spec, re.I)
-            if min_obj is not None:
-                minimum = re.sub(r'®|\?|™', '', min_obj.group())
-        if rec_spec is not None:
-            rec_obj = re.search(r'(?<=graphics:).*?(?=directx|hard|network|storage)', rec_spec, re.I)
-            if rec_obj is not None:
-                recommended = re.sub(r'®|\?|™', '', rec_obj.group())
+        min_obj = re.search(r'(?<=graphics:).*?(?=directx|hard|network|storage)', game['min_specs'], re.I)
+        rec_obj = re.search(r'(?<=graphics:).*?(?=directx|hard|network|storage)', game['rec_specs'], re.I)
+        if min_obj is not None:
+            minimum = re.sub(r'®|\?|™', '', min_obj.group())
+        if rec_obj is not None:
+            recommended = re.sub(r'®|\?|™', '', rec_obj.group())
         for gpu in gpus:
-            if minimum is not None:
-                if gpu['GPU_Name'] in minimum:
-                    min_list.append(gpu['Benchmark_Score'])
-            if recommended is not None:
-                if gpu['GPU_Name'] in recommended:
-                    rec_list.append(gpu['Benchmark_Score'])
+            if gpu['GPU_Name'] in minimum:
+                min_list.append(gpu['Benchmark_Score'])
+            if gpu['GPU_Name'] in recommended:
+                rec_list.append(gpu['Benchmark_Score'])
         values.append(max(min_list, default=None))
         values.append(max(rec_list, default=None))
         values.append(game['appid'])
