@@ -44,12 +44,45 @@ try:
                 recommended = re.sub(r'®|\?|™', '', rec_obj.group())
        # correct^###########################################################################################^correct#
         for cpu in cpus:
-            if minimum is not None:
-                if cpu['cpu_Name'] in minimum:
-                    min_list.append(cpu['Benchmark_Score'])
-            if recommended is not None:
-                if cpu['cpu_Name'] in recommended:
-                    rec_list.append(cpu['Benchmark_Score'])
+            if 'intel' in cpu['CPU_Name'].lower():
+                if '@' in cpu['CPU_Name']:
+                    split_cpu = re.findall(r'.*(?=\s@) | (?<=@\s).*', cpu['CPU_Name'])
+                    cpu = split_cpu[0].strip()
+                    clock = re.search(r'.*(?=ghz)', split_cpu[1].strip(), re.I)
+                else:
+                    clock = re.search(r'\d\.?\d*(?=\s*ghz)', cpu, re.I)
+                if clock is not None:
+                    clock = float(clock.group())
+                model = re.search(r'(?<=intel\s).*(?=\s)', cpu['CPU_Name'], re.I)
+                code = re.search(r'(?<=' + re.escape(model.group()) + r'\s)[^\s]*', cpu['CPU_Name'], re.I)
+                if minimum is not None:
+                    if code.group() in minimum.lower():
+                        min_list.append(cpu['Benchmark_Score'])
+                    elif 'ghz' in minimum.lower():
+                        ghz = re.search(r'\d\.?\d*(?=\s*ghz)', minimum, re.I)
+                        if ghz is not None:
+                            ghz = float(ghz.group())
+                        if model.group() in minimum and clock == ghz:
+                            min_list.append(cpu['Benchmark_Score'])
+                if recommended is not None:
+                    if code.group() in recommended.lower():
+                        rec_list.append(cpu['Benchmark_Score'])
+                    elif 'ghz' in recommended.lower():
+                        ghz = re.search(r'\d\.?\d*(?=\s*ghz)', recommended, re.I)
+                        if ghz is not None:
+                            ghz = float(ghz.group())
+                        if model.group() in recommended and clock == ghz:
+                            rec_list.append(cpu['Benchmark_Score'])
+            else:
+                model = re.search(r'(?<=amd\s).*?(?=\s)', cpu['CPU_Name'], re.I)
+                code = re.search(r'(?<=' + re.escape(model.group()) + r'\s).*', cpu['CPU_Name'], re.I)
+                if minimum is not None:
+                    if code.group() in minimum or model.group() + code.group() in minimum:
+                        min_list.append(cpu['Benchmark_Score'])
+                if recommended is not None:
+                    if code.group() in recommended or model.group() + code.group() in recommended:
+                        rec_list.append(cpu['Benchmark_Score'])
+# TODO if list empty and ghz in processor, put ghz value in for basic comparison
         values.append(max(min_list, default=None))
         values.append(max(rec_list, default=None))
         values.append(game['appid'])
@@ -63,13 +96,6 @@ finally:
     cursor2.close()
     con.close()
 
-spec =
-
-procobj = re.search(r'(?<=processor:).*?(?=memory)', specs, re.I)
-processor = re.sub(r'®|\?|™', '', procobj.group())
-print(processor)
-
-cpu = "AMD Phenom II X2 555"
 
 if 'intel' in cpu.lower():
     if '@' in cpu:
