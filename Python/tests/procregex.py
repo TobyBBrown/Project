@@ -6,19 +6,22 @@ procobj = re.search(r'(?<=processor:).*?(?=memory)', specs, re.I)
 processor = re.sub(r'®|\?|™', '', procobj.group())
 print(processor)
 
-cpu = "AMD Phenom II X2 555"
+cpu = "AIntel Core i7 7920HQ @ 3.10GHz"
 
 if 'intel' in cpu.lower():
     if '@' in cpu:
         split_cpu = re.findall(r'.*(?=\s@) | (?<=@\s).*', cpu)
         cpu = split_cpu[0].strip()
+        model = re.search(r'(?<=intel\s).*(?=\s)', cpu, re.I)
+        code = re.search(r'(?<=' + re.escape(model.group()) + r'\s)[^\s]*', cpu, re.I)
         clock = re.search(r'.*(?=ghz)', split_cpu[1].strip(), re.I)
+        print(model.group())
     else:
         clock = re.search(r'\d\.?\d*(?=\s*ghz)', cpu, re.I)
+        model = re.search(r'(?<=intel\s).*(?=\s)', cpu, re.I)
+        code = re.search(r'(?<=' + re.escape(model.group()) + r'\s)[^\s]*', cpu, re.I)
     if clock is not None:
         clock = float(clock.group())
-    model = re.search(r'(?<=intel\s).*(?=\s)', cpu, re.I)
-    code = re.search(r'(?<=' + re.escape(model.group()) + r'\s)[^\s]*', cpu, re.I)
     if code.group() in processor or model.group() + code.group() in processor:
         #TODO get and put score into database
         print('code match')
@@ -34,13 +37,13 @@ if 'intel' in cpu.lower():
         else:
             print('no match')
             #TODO put None in database
-else:
-    model = re.search(r'(?<=amd\s).*?(?=\s)', cpu, re.I)
-    code = re.search(r'(?<=' + re.escape(model.group()) + r'\s).*', cpu, re.I)
-    print(code.group())
-    if code.group() in processor or model.group() + code.group() in processor:
-        #TODO get and put score into database
-        print('code match')
+# else:
+#     model = re.search(r'(?<=amd\s).*?(?=\s)', cpu, re.I)
+#     code = re.search(r'(?<=' + re.escape(model.group()) + r'\s).*', cpu, re.I)
+#     print(code.group())
+#     if code.group() in processor or model.group() + code.group() in processor:
+#         #TODO get and put score into database
+#         print('code match')
 
 
 #TODO/THINK if list of scores empty and ghz in processor, put ghz value in and use as basic comparison

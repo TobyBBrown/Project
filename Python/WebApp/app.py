@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_BINDS'] = {
 db = SQLAlchemy(app)
 
 
-class testapi(db.Model):
+class test(db.Model):
     appid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     min_specs = db.Column(db.Text)
@@ -38,7 +38,7 @@ def hardware_input():
 
 @app.route("/results")
 def results():
-    return render_template('results.html', url=store_url, rows=testapi.query.all())
+    return render_template('results.html', url=store_url, rows=test.query.all())
 
 
 @app.route("/")
