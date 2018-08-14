@@ -1,14 +1,13 @@
 import re
-from statistics import mean
 from mysql.connector import MySQLConnection, Error
 
 
 def main():
-    game_query = "select * from testapi"
+    game_query = "select * from game_requirements"
 
     cpu_query = "select * from cpubenchmarks"
 
-    update_sql = "update testapi set min_cpu_score=%s, rec_cpu_score=%s where appid = %s"
+    update_sql = "update game_requirements set min_cpu_score=%s, rec_cpu_score=%s where appid = %s"
 
     try:
         con = MySQLConnection(host='localhost',
@@ -30,6 +29,7 @@ def main():
         args = []
 
         for game in games:
+            print(game['appid'])
             values = []
             min_list = []
             rec_list = []
@@ -80,30 +80,16 @@ def main():
                                 ghz = float(ghz.group())
                             if model.group().lower() in recommended.lower() and clock == ghz:
                                 rec_list.append(cpu['Benchmark_Score'])
-                elif 'amd' in cpu['CPU_Name'].lower():
+                else:
                     model = re.search(r'(?<=amd\s).*', cpu['CPU_Name'], re.I)
-                    #code = re.search(r'(?<=' + re.escape(model.group()) + r'\s).*', cpu['CPU_Name'], re.I)
                     if minimum is not None:
                         if model.group() in minimum:
                             min_list.append(cpu['Benchmark_Score'])
                     if recommended is not None:
                         if model.group() in recommended:
                             rec_list.append(cpu['Benchmark_Score'])
-            # if not min_list:
-            #     if minimum is not None:
-            #         if 'ghz' in minimum.lower():
-            #             ghz = re.search(r'\d\.?\d*(?=\s*ghz)', minimum, re.I)
-            #             if ghz is not None:
-            #                 ghz = float(ghz.group())
-            #                 min_list.append(ghz)
-            # if not rec_list:
-            #     if recommended is not None:
-            #         if 'ghz' in recommended.lower():
-            #             ghz = re.search(r'\d\.?\d*(?=\s*ghz)', recommended, re.I)
-            #             if ghz is not None:
-            #                 ghz = float(ghz.group())
-            #                 rec_list.append(ghz)
             print(min_list)
+            print(rec_list)
             values.append(average(min_list))
             values.append(average(rec_list))
             values.append(game['appid'])
