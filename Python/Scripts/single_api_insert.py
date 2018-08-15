@@ -49,12 +49,3 @@ def insert(appid, name, min_specs, rec_specs):
     finally:
         cursor.close()
         con.close()
-
-
-def main():
-    reqs = get_api_data(400)
-    insert(*reqs)
-
-
-if __name__ == '__main__':
-    main()
