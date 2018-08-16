@@ -47,6 +47,8 @@ def get_data(appid):
         price = json['price']
         if price is not None:
             price = int(price)
+        else:
+            price = 0
         return userscore, price
     return None
 

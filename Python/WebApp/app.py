@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import or_
+from sqlalchemy import desc
 from regex import *
 
 
@@ -60,13 +60,13 @@ def hardware_submit():
     ram = int(request.form['ram_num'])
     os = int(request.form['os_version'])
     rows = game_requirements.query.filter(game_requirements.min_cpu_score < cpu.benchmark_score,
-                                          game_requirements.min_gpu_score < gpu.benchmark_score).all()
+                                          game_requirements.min_gpu_score < gpu.benchmark_score).order_by\
+                                          (desc(game_requirements.userscore)).all()
     os_ram_rows = []
     for row in rows:
         if (os_regex(row.min_specs) is None or os >= os_regex(row.min_specs)) and \
                 (ram_regex(row.min_specs) is None or ram >= ram_regex(row.min_specs)):
             os_ram_rows.append(row)
-    print(len(rows), len(os_ram_rows))
     return results(os_ram_rows)
 
 

@@ -47,10 +47,10 @@ def main():
                     recommended = re.sub(r'®|\?|™', '', rec_obj.group())
             for gpu in gpus:
                 if minimum is not None:
-                    if gpu['GPU_Name'] in minimum:
+                    if gpu['GPU_Name'].lower() in minimum.lower():
                         min_list.append(gpu['Benchmark_Score'])
                 if recommended is not None:
-                    if gpu['GPU_Name'] in recommended:
+                    if gpu['GPU_Name'].lower() in recommended.lower():
                         rec_list.append(gpu['Benchmark_Score'])
             print(min_list)
             print(rec_list)
