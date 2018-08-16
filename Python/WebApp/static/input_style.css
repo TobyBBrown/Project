@@ -62,8 +62,11 @@ select {
     font-size: 1.3em;
 }
 
-#bottom_spec input {
-
+#order_submit {
+    position: relative;
+    border-bottom: solid;
+    margin: 0 auto;
+    padding-top: 20px;
 }
 
 #search {

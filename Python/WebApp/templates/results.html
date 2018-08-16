@@ -13,7 +13,6 @@
         <table>
             <thead>
                 <th>Game</th>
-                <th>appid</th>
                 <th>Userscore</th>
                 <th>Price</th>
             </thead>
@@ -22,7 +21,6 @@
                     {% set store_link = url ~ row.appid %}
                     <tr>
                         <td><a href="{{store_link}}">{{ row.name }}</a></td>
-                        <td>{{ row.appid }}</td>
                         <td>{{ row.userscore }}</td>
                         <td>£{{ row.price / 100 }}</td>
                     </tr>
