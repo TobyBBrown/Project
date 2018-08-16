@@ -30,6 +30,5 @@ class cpubenchmarks(Base):
 class gpubenchmarks(Base):
     __tablename__ = 'gpubenchmarks'
 
-    __bind_key__ = 'project'
     gpu_name = Column(String, primary_key=True)
     benchmark_score = Column(Integer)

@@ -42,7 +42,7 @@ label {
     padding-top: 20px;
 }
 
-select {
+#mid_spec select {
     width: 35%;
     margin-left: 4px;
 }
