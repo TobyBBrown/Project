@@ -28,6 +28,8 @@ class game_requirements(db.Model):
     rec_cpu_score = db.Column(db.Integer)
     min_gpu_score = db.Column(db.Integer)
     rec_gpu_score = db.Column(db.Integer)
+    userscore = db.Column(db.Integer)
+    price = db.Column(db.Integer)
 
 
 class cpubenchmarks(db.Model):
