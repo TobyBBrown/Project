@@ -46,10 +46,11 @@ def results():
         print(tag)
         url = 'http://steamspy.com/api.php?request=tag&tag=' + tag
         tag_games = requests.get(url).json()
-        if len(tag_games) == 8:
-            return redirect(url_for('input'))
+        if len(tag_games) != 8:
+            rows = tag_search(tag_games, rows)
+            #return redirect(url_for('input'))
         #TODO invalid input page that redirects after timer
-        rows = tag_search(tag_games, rows)
+        #THINK don't redirect just tret incorrect tag as empty tag
     return render_template('results.html', url=store_url, rows=rows)
 
 
@@ -66,7 +67,7 @@ def os_ram_comparison(rows, os, ram):
 def tag_search(tag_games, rows):
     tag_match_rows = []
     for row in rows:
-        if str(row.appid) in tag_games:
+        if str(row.appid) not in tag_games:
             tag_match_rows.append(row)
     return tag_match_rows
 
