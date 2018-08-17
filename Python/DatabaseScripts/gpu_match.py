@@ -1,8 +1,17 @@
+"""Script for matching GPUs for both minimum and recommended specifications in game requirements
+with their GPU benchmark scores and inserting those scores into the game requirements table.
+"""
+
 import re
 from mysql.connector import MySQLConnection, Error
 
 
 def main():
+    """Connects to database project and queries all game rows. For each game, regexes are used to
+    match the given GPU requirements with GPUs in the cpubenchmarks table. The average of all matched benchmark
+    scores is then inserted into the corresponding field for that game in the game_requirements table.
+    """
+
     game_query = "select * from game_requirements"
 
     gpu_query = "select * from gpubenchmarks"
@@ -26,13 +35,11 @@ def main():
         games = cursor1.fetchall()
         gpus = cursor2.fetchall()
 
-        args = []
-
         for game in games:
             print(game['appid'])
-            values = []
-            min_list = []
-            rec_list = []
+            args = []
+            min_score_list = []
+            rec_score_list = []
             min_spec = game['min_specs']
             rec_spec = game['rec_specs']
             minimum = None
@@ -45,19 +52,23 @@ def main():
                 rec_obj = re.search(r'(?<=graphics:).*?(?=directx|hard|network|storage)', rec_spec, re.I)
                 if rec_obj is not None:
                     recommended = re.sub(r'®|\?|™', '', rec_obj.group())
+
+            # GPU names are matched directly if they are in the gme specifications.
             for gpu in gpus:
                 if minimum is not None:
                     if gpu['GPU_Name'].lower() in minimum.lower():
-                        min_list.append(gpu['Benchmark_Score'])
+                        min_score_list.append(gpu['Benchmark_Score'])
                 if recommended is not None:
                     if gpu['GPU_Name'].lower() in recommended.lower():
-                        rec_list.append(gpu['Benchmark_Score'])
-            print(min_list)
-            print(rec_list)
-            values.append(average(min_list))
-            values.append(average(rec_list))
-            values.append(game['appid'])
-            cursor3.execute(update_query, values)
+                        rec_score_list.append(gpu['Benchmark_Score'])
+
+            # It is likely that for each game multiple GPU scores will be matched, scores are therefore put
+            # into a list and the average score of the list is used as the final benchmark score. This minimises
+            # potential differences between the matched score and the true game requirement score.
+            args.append(average(min_score_list))
+            args.append(average(rec_score_list))
+            args.append(game['appid'])
+            cursor3.execute(update_query, args)
             con.commit()
 
     except Error as error:
@@ -69,6 +80,8 @@ def main():
 
 
 def average(lst):
+    """Calculates and returns the average of values in the given list."""
+
     if not lst:
         return None
     return sum(lst) / len(lst)

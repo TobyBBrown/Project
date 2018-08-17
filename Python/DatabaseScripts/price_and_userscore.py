@@ -1,8 +1,12 @@
+"""Script for inserting the userscore and price of each game in game_requirements."""
+
 from mysql.connector import MySQLConnection, Error
 import requests
 
 
 def database_insert():
+    """Inserts the retrieved values for userscore and price into game_requirements for each game."""
+
     game_query = "select appid from game_requirements"
 
 
@@ -40,6 +44,10 @@ def database_insert():
 
 
 def get_data(appid):
+    """Retrieves and returns the values for userscore and price from the steamspy api for the
+    given appid.
+    """
+
     url = 'http://steamspy.com/api.php?request=appdetails&appid=' + str(appid)
     json = requests.get(url).json()
     if json is not None:

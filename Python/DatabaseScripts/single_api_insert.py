@@ -34,7 +34,7 @@ def get_api_data(appid, level):
 
 def insert(appid, name, min_specs, rec_specs):
     """Inserts the provided game data into the game_requirements table."""
-    
+
     query = """insert into game_requirements(appid, name, min_specs, rec_specs)
             values (%s,%s,%s,%s)"""
 
