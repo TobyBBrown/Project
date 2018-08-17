@@ -16,6 +16,11 @@ def check_id(appid):
 
 
 def get_api_data(appid, level):
+    """Retrieves data from the steam store api entry for the given appid and for the given
+    requirements level (minimum/recommended).
+    Returns a tuple containing the game appid, name and retrieved specifications.
+    """
+
     url = 'https://store.steampowered.com/api/appdetails/?appids=' + str(appid)
     json = requests.get(url).json()
     reqs = json[str(appid)]['data']['pc_requirements']
@@ -28,6 +33,8 @@ def get_api_data(appid, level):
 
 
 def insert(appid, name, min_specs, rec_specs):
+    """Inserts the provided game data into the game_requirements table."""
+    
     query = """insert into game_requirements(appid, name, min_specs, rec_specs)
             values (%s,%s,%s,%s)"""
 
