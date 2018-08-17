@@ -34,18 +34,13 @@ def results():
     cpu = db.session.query(cpubenchmarks).get(request.form['CPU'])
     gpu = db.session.query(gpubenchmarks).get(request.form['GPU'])
     #TODO if cpu or gpu are not selected properly, return page saying input correctly
-    ram = int(request.form['ram_num'])
+    ram = float(request.form['ram_num'])
     os = int(request.form['os_version'])
+    spec_level = request.form['spec_level']
     order = request.form['order_by']
     tag = request.form['tag_search']
-    if order == 'performance':
-        rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
-                                        game_requirements.min_gpu_score < gpu.benchmark_score).all()
-        rows = performance_rank(cpu, gpu, rows)
-    else:
-        rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
-                                          game_requirements.min_gpu_score < gpu.benchmark_score).order_by\
-                                          (desc(order)).all()
+
+    rows = get_rows(cpu, gpu, order, spec_level)
     rows = os_ram_comparison(rows, os, ram)
     if tag != '':
         url_tag = re.sub(r' ', r'+', tag.strip())  # standardise tags to include '+' for whitespace for api call
@@ -61,7 +56,34 @@ def results():
     return render_template('results.html', url=store_url, rows=rows)
 
 
-def performance_rank(user_cpu, user_gpu, rows ):
+def get_rows(cpu, gpu, order, spec_level):
+    if spec_level == 'minimum':
+        if order == 'performance':
+            rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
+                                            game_requirements.min_gpu_score < gpu.benchmark_score).all()
+            rows = performance_rank(cpu, gpu, rows)
+        else:
+            rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
+                                              game_requirements.min_gpu_score < gpu.benchmark_score).order_by\
+                                              (desc(order)).all()
+    else:
+        if order == 'performance':
+            rows = db.session.query(game_requirements).filter(game_requirements.rec_cpu_score < cpu.benchmark_score,
+                                                game_requirements.rec_gpu_score < gpu.benchmark_score).all()
+            rows = performance_rank(cpu, gpu, rows)
+        else:
+            rows = db.session.query(game_requirements).filter(game_requirements.rec_cpu_score < cpu.benchmark_score,
+                                                game_requirements.rec_gpu_score < gpu.benchmark_score).\
+                order_by(desc(order)).all()
+    return rows
+
+
+def performance_rank(user_cpu, user_gpu, rows):
+    """Calculates the performance score for each game by taking the sum of the ratios of the users hardware
+    to the game's requirements and puts them into a dictionary. This dictionary is then sorted in
+    descending order of performance scores and returned as a list of game rows.
+    """
+
     performance_scores = {}
     for row in rows:
         cpu_ratio = user_cpu.benchmark_score / row.min_cpu_score
@@ -73,7 +95,6 @@ def performance_rank(user_cpu, user_gpu, rows ):
         while final_ratio in performance_scores:
             final_ratio += 0.1
         performance_scores[final_ratio] = row
-    print(len(performance_scores))
     sorted_list = [value for (key, value) in sorted(performance_scores.items(), reverse=True)]
     return sorted_list
 

@@ -24,7 +24,10 @@ def ram_regex(specs):
         mem_obj = re.search(r'(?<=memory:).*(?=ram|graphics:)', specs, re.I)
         if mem_obj is not None:
             mem = mem_obj.group()
-            mem_num = re.search(r'\d', mem)
+            mem_num = re.search(r'\d+', mem)
             if mem_num is not None:
-                return int(mem_num.group())
+                print(mem_num.group())
+                if mem_num.group() == '512':
+                    return 0.5
+                return float(mem_num.group())
     return None

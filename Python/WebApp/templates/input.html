@@ -34,7 +34,7 @@
               <label for="ram">RAM</label>
               <select name="ram_num" id="ram" required>
                   <option value="" disabled selected hidden>Choose RAM...</option>
-                  <option value=512>512 MB</option>
+                  <option value=0.5>512 MB</option>
                   <option value=1>1 GB</option>
                   <option value=2>2 GB</option>
                   <option value=4>4 GB</option>
@@ -54,9 +54,9 @@
           </div>
           <div id="bottom_spec">
               <label for="min">Minimum:</label>
-              <input type="radio" name="spec_level" id="min" value="Minimum"/>
+              <input type="radio" name="spec_level" id="min" checked="checked" value="minimum"/>
               <label for="rec">Recommended:</label>
-              <input type="radio" name="spec_level" id="rec" value="Recommended" />
+              <input type="radio" name="spec_level" id="rec" value="mecommended" />
 
           </div>
           <div id="order_submit">
