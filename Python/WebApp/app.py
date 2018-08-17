@@ -14,9 +14,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Katm2803@lo
 db = SQLAlchemy(app)
 
 
-#def performance_rank(user_cpu, user_gpu, ):
-
-
 @app.route("/")
 @app.route("/input")
 def input():
@@ -44,6 +41,7 @@ def results():
     if order == 'performance':
         rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
                                         game_requirements.min_gpu_score < gpu.benchmark_score).all()
+        rows = performance_rank(cpu, gpu, rows)
     else:
         rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
                                           game_requirements.min_gpu_score < gpu.benchmark_score).order_by\
@@ -51,7 +49,6 @@ def results():
     rows = os_ram_comparison(rows, os, ram)
     if tag != '':
         url_tag = re.sub(r' ', r'+', tag.strip())  # standardise tags to include '+' for whitespace for api call
-        print(url_tag)
         url = 'http://steamspy.com/api.php?request=tag&tag=' + url_tag
         tag_games = requests.get(url).json()
 
@@ -60,9 +57,25 @@ def results():
             #return redirect(url_for('input'))
         #TODO invalid input page that redirects after timer
         #THINK don't redirect just tret incorrect tag as empty tag
-    print(len(rows))
     store_url = 'https://store.steampowered.com/app/'
     return render_template('results.html', url=store_url, rows=rows)
+
+
+def performance_rank(user_cpu, user_gpu, rows ):
+    performance_scores = {}
+    for row in rows:
+        cpu_ratio = user_cpu.benchmark_score / row.min_cpu_score
+        gpu_ratio = user_gpu.benchmark_score / row.min_gpu_score
+        final_ratio = cpu_ratio + gpu_ratio
+        # Some games may have the same requirements and therefore the same performance ratio.
+        # This causes them to be replaced in the dictionary, 0.1 is therefore added to their ratios
+        # to ensure all games are retained in the dictionary/
+        while final_ratio in performance_scores:
+            final_ratio += 0.1
+        performance_scores[final_ratio] = row
+    print(len(performance_scores))
+    sorted_list = [value for (key, value) in sorted(performance_scores.items(), reverse=True)]
+    return sorted_list
 
 
 def os_ram_comparison(rows, os, ram):
