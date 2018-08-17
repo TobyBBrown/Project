@@ -1,3 +1,6 @@
+"""Flask web application for 'What Can I Run?'. """
+
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
@@ -11,21 +14,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Katm2803@lo
 db = SQLAlchemy(app)
 
 
-store_url = 'https://store.steampowered.com/app/'
-
-
 #def performance_rank(user_cpu, user_gpu, ):
 
 
 @app.route("/")
 @app.route("/input")
 def input():
+    """Returns the home input page containing the form to input the user's hardware information."""
+
     return render_template('input.html', cpus=db.session.query(cpubenchmarks).all(),
                            gpus=db.session.query(gpubenchmarks).all(), tags=db.session.query(tags).all())
 
 
 @app.route("/results", methods=['POST'])
 def results():
+    """Gets input data from the form and formulates the game row results by querying databases using received data.
+    Performs additional comparisons to OS and RAM and matches games with the provided tag search.
+    Orders resulting rows based upon ordering option selected by user.
+    Returns the results containing the final list of matching results.
+    """
+
     cpu = db.session.query(cpubenchmarks).get(request.form['CPU'])
     gpu = db.session.query(gpubenchmarks).get(request.form['GPU'])
     #TODO if cpu or gpu are not selected properly, return page saying input correctly
@@ -53,6 +61,7 @@ def results():
         #TODO invalid input page that redirects after timer
         #THINK don't redirect just tret incorrect tag as empty tag
     print(len(rows))
+    store_url = 'https://store.steampowered.com/app/'
     return render_template('results.html', url=store_url, rows=rows)
 
 
@@ -60,6 +69,7 @@ def os_ram_comparison(rows, os, ram):
     """Compares the user's OS version and RAM to each game in the given list of rows.
     Returns a new list containing all games with OS and RAM lower than the user.
     """
+
     os_ram_rows = []
     for row in rows:
         if (os_regex(row.min_specs) is None or os >= os_regex(row.min_specs)) and \
@@ -74,6 +84,7 @@ def tag_search(tag_games, rows):
     tag_games is a list of all games that have the given steam tag.
     Returns a new list of all game rows that are in both lists.
     """
+
     tag_match_rows = []
     for row in rows:
         if str(row.appid) in tag_games:
