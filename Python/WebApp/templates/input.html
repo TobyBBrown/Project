@@ -69,7 +69,12 @@
               <input type="submit" value="Submit">
           </div>
           <div id="search">
-            <input type="text" name="tag_search" id="tag_input" placeholder="Input a steam tag">
+              <input type="text" name="tag_search" id="tag_input" list="tags" placeholder="Input a steam tag">
+              <datalist id="tags">
+                  {% for tag in tags %}
+                    <option value="{{tag.tag}}">
+                  {% endfor %}
+              </datalist>
           </div>
       </form>
   </div>

@@ -1,5 +1,4 @@
 import unittest
-import re
 from regex import *
 
 
@@ -28,8 +27,8 @@ class TestRegex(unittest.TestCase):
         incorrect_specs = '''Minimum Configuration: Windows XP, Pentium II 233 Mhz, 32 Mb RAM, 1200 MB hard 
         disk space, DirectX 7.1, 16-bit sound card, Video Card with 8 MB RAM'''
         none_specs = None
-        self.assertEqual('2', mem_regex(specs1))
-        self.assertEqual('3', mem_regex(specs2))
-        self.assertEqual(None, mem_regex(incorrect_specs))
-        self.assertEqual(None, mem_regex(none_specs))
+        self.assertEqual('2', ram_regex(specs1))
+        self.assertEqual('3', ram_regex(specs2))
+        self.assertEqual(None, ram_regex(incorrect_specs))
+        self.assertEqual(None, ram_regex(none_specs))
 

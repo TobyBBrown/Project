@@ -21,7 +21,7 @@ store_url = 'https://store.steampowered.com/app/'
 @app.route("/input")
 def input():
     return render_template('input.html', cpus=db.session.query(cpubenchmarks).all(),
-                           gpus=db.session.query(gpubenchmarks).all())
+                           gpus=db.session.query(gpubenchmarks).all(), tags=db.session.query(tags).all())
 
 
 @app.route("/results", methods=['POST'])
