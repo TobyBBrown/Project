@@ -26,7 +26,6 @@ def ram_regex(specs):
             mem = mem_obj.group()
             mem_num = re.search(r'\d+', mem)
             if mem_num is not None:
-                print(mem_num.group())
                 if mem_num.group() == '512':
                     return 0.5
                 return float(mem_num.group())

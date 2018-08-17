@@ -58,23 +58,20 @@ def results():
 
 def get_rows(cpu, gpu, order, spec_level):
     if spec_level == 'minimum':
-        if order == 'performance':
-            rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
-                                            game_requirements.min_gpu_score < gpu.benchmark_score).all()
-            rows = performance_rank(cpu, gpu, rows)
-        else:
-            rows = db.session.query(game_requirements).filter(game_requirements.min_cpu_score < cpu.benchmark_score,
-                                              game_requirements.min_gpu_score < gpu.benchmark_score).order_by\
-                                              (desc(order)).all()
+        cpu_score = getattr(game_requirements, 'min_cpu_score')
+        gpu_score = getattr(game_requirements, 'min_gpu_score')
     else:
-        if order == 'performance':
-            rows = db.session.query(game_requirements).filter(game_requirements.rec_cpu_score < cpu.benchmark_score,
-                                                game_requirements.rec_gpu_score < gpu.benchmark_score).all()
-            rows = performance_rank(cpu, gpu, rows)
-        else:
-            rows = db.session.query(game_requirements).filter(game_requirements.rec_cpu_score < cpu.benchmark_score,
-                                                game_requirements.rec_gpu_score < gpu.benchmark_score).\
-                order_by(desc(order)).all()
+        cpu_score = getattr(game_requirements, 'rec_cpu_score')
+        gpu_score = getattr(game_requirements, 'rec_gpu_score')
+    if order == 'performance':
+        rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
+                                        gpu_score < gpu.benchmark_score).all()
+        rows = performance_rank(cpu, gpu, rows)
+    else:
+        rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
+                                          gpu_score < gpu.benchmark_score).order_by\
+                                          (desc(order)).all()
+    print(len(rows))
     return rows
 
 
