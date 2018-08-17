@@ -1,4 +1,4 @@
-"""Flask web application for 'What Can I Run?'. """
+"""Flask web application for 'What Can I Run?'."""
 
 
 from flask import Flask, render_template, request, redirect, url_for

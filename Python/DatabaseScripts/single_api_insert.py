@@ -1,12 +1,17 @@
+"""Functions for getting the data from the steam store api and inserting data in the project database."""
+
 from mysql.connector import MySQLConnection, Error
 import requests
 
 
 def check_id(appid):
+    """Checks whether the steam store api has an entry for the appid provided.
+    Returns the boolean value corresponding to the presence of an entry.
+    """
+
     url = 'https://store.steampowered.com/api/appdetails/?appids=' + str(appid)
     json = requests.get(url).json()
     success = json[str(appid)]['success']
-    print(appid)
     return success
 
 
