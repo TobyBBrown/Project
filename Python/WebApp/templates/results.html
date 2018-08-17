@@ -17,12 +17,12 @@
                 <th>Price</th>
             </thead>
             <tbody>
-                {% for row in rows %}
-                    {% set store_link = url ~ row.appid %}
+                {% for i in range(200) %}
+                    {% set store_link = url ~ rows[i].appid %}
                     <tr>
-                        <td><a href="{{store_link}}">{{ row.name }}</a></td>
-                        <td>{{ row.userscore }}</td>
-                        <td>£{{ row.price / 100 }}</td>
+                        <td><a href="{{store_link}}">{{ rows[i].name }}</a></td>
+                        <td>{{ rows[i].userscore }}</td>
+                        <td>£{{ rows[i].price / 100 }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

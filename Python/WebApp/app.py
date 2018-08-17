@@ -33,7 +33,8 @@ def results():
 
     cpu = db.session.query(cpubenchmarks).get(request.form['CPU'])
     gpu = db.session.query(gpubenchmarks).get(request.form['GPU'])
-    #TODO if cpu or gpu are not selected properly, return page saying input correctly
+    if cpu is None or gpu is None:
+        return render_template('incorrect_hardware.html')
     ram = float(request.form['ram_num'])
     os = int(request.form['os_version'])
     spec_level = request.form['spec_level']
@@ -72,7 +73,6 @@ def get_rows(cpu, gpu, os, ram, order, spec_level):
         rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
                                           gpu_score < gpu.benchmark_score).order_by\
                                           (desc(order)).all()
-    print(len(rows))
     rows = os_ram_comparison(rows, os, ram)
     return rows
 
