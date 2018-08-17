@@ -40,15 +40,10 @@ def results():
     order = request.form['order_by']
     tag = request.form['tag_search']
 
-    rows = get_rows(cpu, gpu, order, spec_level)
-    rows = os_ram_comparison(rows, os, ram)
-    if tag != '':
-        url_tag = re.sub(r' ', r'+', tag.strip())  # standardise tags to include '+' for whitespace for api call
-        url = 'http://steamspy.com/api.php?request=tag&tag=' + url_tag
-        tag_games = requests.get(url).json()
+    rows = get_rows(cpu, gpu, os, ram, order, spec_level)
 
-        if db.session.query(tags).filter(tags.tag == tag).all():  # check if given tag exists in db table
-            rows = tag_search(tag_games, rows)
+    if tag != '':
+        rows = tag_search(tag, rows)
             #return redirect(url_for('input'))
         #TODO invalid input page that redirects after timer
         #THINK don't redirect just tret incorrect tag as empty tag
@@ -56,7 +51,13 @@ def results():
     return render_template('results.html', url=store_url, rows=rows)
 
 
-def get_rows(cpu, gpu, order, spec_level):
+def get_rows(cpu, gpu, os, ram, order, spec_level):
+    """Determines the level of specification comparison (minimum/recommended)
+    and queries the database for games that are met by the user's hardware. Orders rows
+    based upon the order parameter and calls os_ram_comparison. Returns the final list of rows that fulfil
+    all requirements.
+    """
+
     if spec_level == 'minimum':
         cpu_score = getattr(game_requirements, 'min_cpu_score')
         gpu_score = getattr(game_requirements, 'min_gpu_score')
@@ -72,13 +73,14 @@ def get_rows(cpu, gpu, order, spec_level):
                                           gpu_score < gpu.benchmark_score).order_by\
                                           (desc(order)).all()
     print(len(rows))
+    rows = os_ram_comparison(rows, os, ram)
     return rows
 
 
 def performance_rank(user_cpu, user_gpu, rows):
     """Calculates the performance score for each game by taking the sum of the ratios of the users hardware
-    to the game's requirements and puts them into a dictionary. This dictionary is then sorted in
-    descending order of performance scores and returned as a list of game rows.
+    to the game's requirements and putting them into a dictionary. Sorts the dictionary in
+    descending order of performance scores and returns it as a list of game rows.
     """
 
     performance_scores = {}
@@ -110,17 +112,23 @@ def os_ram_comparison(rows, os, ram):
 #TODO write test
 
 
-def tag_search(tag_games, rows):
-    """Matches the appids of games provided in rows to the appids of games in tag_games.
-    tag_games is a list of all games that have the given steam tag.
+def tag_search(tag, rows):
+    """Checks whether tag is a real tag on steam. If so, retrieves data on games that have that tag
+    from the steamspy api. Matches the appids of games provided in rows to the appids of games that have that
+    tag.
     Returns a new list of all game rows that are in both lists.
     """
+    if db.session.query(tags).filter(tags.tag == tag).all():  # check if given tag exists in db table
+        url_tag = re.sub(r' ', r'+', tag.strip())  # standardise tags to include '+' for whitespace for api call
+        url = 'http://steamspy.com/api.php?request=tag&tag=' + url_tag
+        tag_games = requests.get(url).json()
 
-    tag_match_rows = []
-    for row in rows:
-        if str(row.appid) in tag_games:
-            tag_match_rows.append(row)
-    return tag_match_rows
+        tag_match_rows = []
+        for row in rows:
+            if str(row.appid) in tag_games:
+                tag_match_rows.append(row)
+        return tag_match_rows
+    return rows
 #TODO write test
 
 
