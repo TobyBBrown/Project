@@ -5,27 +5,21 @@ h1 {
     font-weight: bold;
 }
 
-#specification {
+form {
     position: relative;
-    border: 3px solid;
-    border-radius: 7px;
     height: 200px;
     width: 70%;
     margin: auto;
-    margin-bottom: 30px;
-    font-family: Arial, sans-serif;
-
 }
 
 #top_spec {
     position: relative;
-    border-bottom: solid;
-    margin: 0 auto;
+    border: 3px solid;
+    border-radius: 7px;
+    margin: 10px auto;
     padding-top: 20px;
-}
+    font-family: Arial, sans-serif;
 
-label {
-    margin-left: 5%;
 }
 
 #top_spec input {
@@ -37,49 +31,74 @@ label {
 
 #mid_spec {
     position: relative;
-    border-bottom: solid;
-    margin: 0 auto;
+    border: 3px solid;
+    border-radius: 7px;
+    margin: 10px auto;
     padding-top: 20px;
+    font-family: Arial, sans-serif;
 }
 
-#mid_spec select {
+select {
     width: 35%;
     margin-left: 4px;
 }
 
 #bottom_spec {
     position: relative;
-    width: 70%;
-    margin: 0 auto;
-    padding-top: 20px;
+    border: 3px solid;
+    border-radius: 7px;
+    margin: 10px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
 
 }
 
-#bottom_spec label {
+#bottom_spec input {
     position: relative;
-    margin: 10%;
-    margin-right: 3%;
-    font-size: 1.3em;
+    width: 25%;
+    margin: auto auto auto 2px;
+    text-align: center;
 }
+
 
 #order_submit {
     position: relative;
     border: 3px solid;
-    margin: 0 auto;
-    padding-top: 20px;
+    border-radius: 7px;
+    margin: 10px auto 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+
+}
+
+#order_submit select {
+    margin-right: 10%;
+}
+
+#order_submit input {
+    margin-left: 10%;
+    background: black;
+    color: white;
+    border-style: outset;
+    border-color: gray;
+    height: 30px;
+    width: 100px;
+    font: bold 15px arial, sans-serif;
+    text-shadow:none;
 }
 
 #search {
+    position: relative;
     border: transparent;
-    border-radius: 7px;
-    width: 70%;
     margin: auto;
+    padding-top: 20px;
     font-family: Arial, sans-serif;
 
 }
 
 #tag_input {
     width: 99%;
+    height: 50px;
     border: 3px solid;
     border-radius: 7px;
     font-size: 1.5em;
@@ -87,6 +106,7 @@ label {
 
 }
 
-#specification input, #specification select{
-    font-size: 1.1em;
+label {
+    margin-left: 5%;
+    font-weight: bold;
 }
