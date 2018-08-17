@@ -42,19 +42,24 @@ def results():
                                           (desc(order)).all()
     rows = os_ram_comparison(rows, os, ram)
     if tag != '':
-        tag = re.sub(r' ', r'+', tag.strip())  # standardise tags to include '+' for whitespace for api call
-        print(tag)
-        url = 'http://steamspy.com/api.php?request=tag&tag=' + tag
+        url_tag = re.sub(r' ', r'+', tag.strip())  # standardise tags to include '+' for whitespace for api call
+        print(url_tag)
+        url = 'http://steamspy.com/api.php?request=tag&tag=' + url_tag
         tag_games = requests.get(url).json()
-        if len(tag_games) != 8:
+
+        if db.session.query(tags).filter(tags.tag == tag).all():  # check if given tag exists in db table
             rows = tag_search(tag_games, rows)
             #return redirect(url_for('input'))
         #TODO invalid input page that redirects after timer
         #THINK don't redirect just tret incorrect tag as empty tag
+    print(len(rows))
     return render_template('results.html', url=store_url, rows=rows)
 
 
 def os_ram_comparison(rows, os, ram):
+    """Compares the user's OS version and RAM to each game in the given list of rows.
+    Returns a new list containing all games with OS and RAM lower than the user.
+    """
     os_ram_rows = []
     for row in rows:
         if (os_regex(row.min_specs) is None or os >= os_regex(row.min_specs)) and \
@@ -65,11 +70,16 @@ def os_ram_comparison(rows, os, ram):
 
 
 def tag_search(tag_games, rows):
+    """Matches the appids of games provided in rows to the appids of games in tag_games.
+    tag_games is a list of all games that have the given steam tag.
+    Returns a new list of all game rows that are in both lists.
+    """
     tag_match_rows = []
     for row in rows:
-        if str(row.appid) not in tag_games:
+        if str(row.appid) in tag_games:
             tag_match_rows.append(row)
     return tag_match_rows
+#TODO write test
 
 
 if __name__ == '__main__':

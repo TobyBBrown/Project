@@ -32,3 +32,9 @@ class gpubenchmarks(Base):
 
     gpu_name = Column(String, primary_key=True)
     benchmark_score = Column(Integer)
+
+
+class tags(Base):
+    __tablename__ = 'tags'
+
+    tag = Column(String, primary_key=True)
