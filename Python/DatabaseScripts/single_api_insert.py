@@ -44,7 +44,7 @@ def insert(appid, name, min_specs, rec_specs):
         con = MySQLConnection(host='localhost',
                database='project',
                user='root',
-               password='Katm2803')
+               password='project')
         if con.is_connected():
             print('Connected to database')
 

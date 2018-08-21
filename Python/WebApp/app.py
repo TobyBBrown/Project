@@ -10,7 +10,7 @@ import requests
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Katm2803@localhost:3306/project'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:project@localhost:3306/project'
 db = SQLAlchemy(app)
 
 
@@ -31,9 +31,9 @@ def results():
     Returns the results containing the final list of matching results.
     """
 
-    cpu = db.session.query(cpubenchmarks).get(request.form['CPU'])
-    gpu = db.session.query(gpubenchmarks).get(request.form['GPU'])
-    if cpu is None or gpu is None:
+    cpus = db.session.query(cpubenchmarks).get(request.form['CPU'])
+    gpus = db.session.query(gpubenchmarks).get(request.form['GPU'])
+    if cpus is None or gpus is None:
         return render_template('incorrect_hardware.html')
     ram = float(request.form['ram_num'])
     os = int(request.form['os_version'])
@@ -41,7 +41,7 @@ def results():
     order = request.form['order_by']
     tag = request.form['tag_search']
 
-    rows = get_rows(cpu, gpu, os, ram, order, spec_level)
+    rows = get_rows(cpus, gpus, os, ram, order, spec_level)
 
     if tag != '':
         rows = tag_search(tag, rows)

@@ -16,7 +16,7 @@ class TestSingleAPIInsert(unittest.TestCase):
             con = MySQLConnection(host='localhost',
                                   database='test',
                                   user='root',
-                                  password='Katm2803')
+                                  password='project')
             if con.is_connected():
                 print('Connected to database')
 

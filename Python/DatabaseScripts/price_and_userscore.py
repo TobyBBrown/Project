@@ -9,14 +9,13 @@ def database_insert():
 
     game_query = "select appid from game_requirements"
 
-
     update_query = "update game_requirements set userscore=%s, price=%s where appid = %s"
 
     try:
         con = MySQLConnection(host='localhost',
                               database='project',
                               user='root',
-                              password='Katm2803')
+                              password='project')
         if con.is_connected():
             print('Connected to database')
 
