@@ -1,7 +1,7 @@
 """Flask web application for 'What Can I Run?'."""
 
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from regex import *
