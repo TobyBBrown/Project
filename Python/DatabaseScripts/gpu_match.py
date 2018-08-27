@@ -53,7 +53,7 @@ def main():
                 if rec_obj is not None:
                     recommended = re.sub(r'®|\?|™', '', rec_obj.group())
 
-            # GPU names are matched directly if they are in the gme specifications.
+            # GPU names are matched directly if they are in the game specifications.
             for gpu in gpus:
                 if minimum is not None:
                     if gpu['GPU_Name'].lower() in minimum.lower():

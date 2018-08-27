@@ -49,6 +49,8 @@ def results():
         #TODO invalid input page that redirects after timer
         #THINK don't redirect just tret incorrect tag as empty tag
     store_url = 'https://store.steampowered.com/app/'
+    if len(rows) > 200:
+        rows = rows[:200]
     return render_template('results.html', url=store_url, rows=rows)
 
 
@@ -68,7 +70,7 @@ def get_rows(cpu, gpu, os, ram, order, spec_level):
     if order == 'performance':
         rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
                                         gpu_score < gpu.benchmark_score).all()
-        rows = performance_rank(cpu, gpu, rows)
+        rows = performance_rank(cpu, gpu, rows, cpu_score, gpu_score)
     else:
         rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
                                           gpu_score < gpu.benchmark_score).order_by\
@@ -77,7 +79,7 @@ def get_rows(cpu, gpu, os, ram, order, spec_level):
     return rows
 
 
-def performance_rank(user_cpu, user_gpu, rows):
+def performance_rank(user_cpu, user_gpu, rows, cpu_score, gpu_score):
     """Calculates the performance score for each game by taking the sum of the ratios of the users hardware
     to the game's requirements and putting them into a dictionary. Sorts the dictionary in
     descending order of performance scores and returns it as a list of game rows.
@@ -85,8 +87,8 @@ def performance_rank(user_cpu, user_gpu, rows):
 
     performance_scores = {}
     for row in rows:
-        cpu_ratio = user_cpu.benchmark_score / row.min_cpu_score
-        gpu_ratio = user_gpu.benchmark_score / row.min_gpu_score
+        cpu_ratio = user_cpu.benchmark_score / cpu_score
+        gpu_ratio = user_gpu.benchmark_score / gpu_score
         final_ratio = cpu_ratio + gpu_ratio
         # Some games may have the same requirements and therefore the same performance ratio.
         # This causes them to be replaced in the dictionary, 0.1 is therefore added to their ratios
