@@ -45,9 +45,6 @@ def results():
 
     if tag != '':
         rows = tag_search(tag, rows)
-            #return redirect(url_for('input'))
-        #TODO invalid input page that redirects after timer
-        #THINK don't redirect just tret incorrect tag as empty tag
     store_url = 'https://store.steampowered.com/app/'
     if len(rows) > 200:
         rows = rows[:200]
