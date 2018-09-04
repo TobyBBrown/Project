@@ -67,7 +67,7 @@ def get_rows(cpu, gpu, os, ram, order, spec_level):
     if order == 'performance':
         rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
                                         gpu_score < gpu.benchmark_score).all()
-        rows = performance_rank(cpu, gpu, rows, cpu_score, gpu_score)
+        rows = performance_rank(cpu, gpu, rows, spec_level)
     else:
         rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
                                           gpu_score < gpu.benchmark_score).order_by\
@@ -76,7 +76,7 @@ def get_rows(cpu, gpu, os, ram, order, spec_level):
     return rows
 
 
-def performance_rank(user_cpu, user_gpu, rows, cpu_score, gpu_score):
+def performance_rank(user_cpu, user_gpu, rows, spec_level):
     """Calculates the performance score for each game by taking the sum of the ratios of the users hardware
     to the game's requirements and putting them into a dictionary. Sorts the dictionary in
     descending order of performance scores and returns it as a list of game rows.
@@ -84,8 +84,12 @@ def performance_rank(user_cpu, user_gpu, rows, cpu_score, gpu_score):
 
     performance_scores = {}
     for row in rows:
-        cpu_ratio = user_cpu.benchmark_score / cpu_score
-        gpu_ratio = user_gpu.benchmark_score / gpu_score
+        if spec_level == 'minimum':
+            cpu_ratio = user_cpu.benchmark_score / row.min_cpu_score
+            gpu_ratio = user_gpu.benchmark_score / row.min_gpu_score
+        else:
+            cpu_ratio = user_cpu.benchmark_score / row.rec_cpu_score
+            gpu_ratio = user_gpu.benchmark_score / row.rec_gpu_score
         final_ratio = cpu_ratio + gpu_ratio
         # Some games may have the same requirements and therefore the same performance ratio.
         # This causes them to be replaced in the dictionary, 0.1 is therefore added to their ratios
