@@ -93,7 +93,7 @@ def performance_rank(user_cpu, user_gpu, rows, spec_level):
         final_ratio = cpu_ratio + gpu_ratio
         # Some games may have the same requirements and therefore the same performance ratio.
         # This causes them to be replaced in the dictionary, 0.1 is therefore added to their ratios
-        # to ensure all games are retained in the dictionary/
+        # to ensure all games are retained in the dictionary
         while final_ratio in performance_scores:
             final_ratio += 0.1
         performance_scores[final_ratio] = row

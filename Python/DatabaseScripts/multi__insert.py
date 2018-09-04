@@ -32,4 +32,4 @@ for i in range(0, 920000, 10):  # There are no steam games with appids greater t
             min_specs = None
         final_data = data[0], data[1], min_specs, rec_specs  # data[0] is the appid and data[1] the name
         insert(*final_data)
-    sleep(2)
+    sleep(1)
