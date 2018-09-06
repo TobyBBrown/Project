@@ -2,7 +2,7 @@
  formats the data using regexes to enhance it's readability and inserts it into the database.
  """
 
-from single_api_insert import *
+from data_extract_and_insert import *
 import re
 from time import sleep
 

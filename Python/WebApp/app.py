@@ -41,17 +41,15 @@ def results():
     order = request.form['order_by']
     tag = request.form['tag_search']
 
-    rows = get_rows(cpus, gpus, os, ram, order, spec_level)
+    rows = get_rows(cpus, gpus, os, ram, order, spec_level, tag)
 
-    if tag != '':
-        rows = tag_search(tag, rows)
     store_url = 'https://store.steampowered.com/app/'
     if len(rows) > 200:
         rows = rows[:200]
     return render_template('results.html', url=store_url, rows=rows)
 
 
-def get_rows(cpu, gpu, os, ram, order, spec_level):
+def get_rows(cpu, gpu, os, ram, order, spec_level, tag):
     """Determines the level of specification comparison (minimum/recommended)
     and queries the database for games that are met by the user's hardware. Orders rows
     based upon the order parameter and calls os_ram_comparison. Returns the final list of rows that fulfil
@@ -72,7 +70,9 @@ def get_rows(cpu, gpu, os, ram, order, spec_level):
         rows = db.session.query(game_requirements).filter(cpu_score < cpu.benchmark_score,
                                           gpu_score < gpu.benchmark_score).order_by\
                                           (desc(order)).all()
-    rows = os_ram_comparison(rows, os, ram)
+    rows = os_ram_comparison(rows, os, ram, spec_level)
+    if tag != '':
+        rows = tag_search(tag, rows)
     return rows
 
 
@@ -101,18 +101,22 @@ def performance_rank(user_cpu, user_gpu, rows, spec_level):
     return sorted_list
 
 
-def os_ram_comparison(rows, os, ram):
+def os_ram_comparison(rows, os, ram, spec_level):
     """Compares the user's OS version and RAM to each game in the given list of rows.
     Returns a new list containing all games with OS and RAM lower than the user.
     """
 
     os_ram_rows = []
     for row in rows:
-        if (os_regex(row.min_specs) is None or os >= os_regex(row.min_specs)) and \
-                (ram_regex(row.min_specs) is None or ram >= ram_regex(row.min_specs)):
-            os_ram_rows.append(row)
+        if spec_level == 'minimum':
+            if (os_regex(row.min_specs) is None or os >= os_regex(row.min_specs)) and \
+                    (ram_regex(row.min_specs) is None or ram >= ram_regex(row.min_specs)):
+                os_ram_rows.append(row)
+        else:
+            if (os_regex(row.rec_specs) is None or os >= os_regex(row.rec_specs)) and \
+                    (ram_regex(row.rec_specs) is None or ram >= ram_regex(row.rec_specs)):
+                os_ram_rows.append(row)
     return os_ram_rows
-#TODO write test
 
 
 def tag_search(tag, rows):
@@ -132,7 +136,6 @@ def tag_search(tag, rows):
                 tag_match_rows.append(row)
         return tag_match_rows
     return rows
-#TODO write test
 
 
 if __name__ == '__main__':

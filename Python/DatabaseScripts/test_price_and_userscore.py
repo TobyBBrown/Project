@@ -1,5 +1,5 @@
 import unittest
-from price_and_userscore import  get_data
+from price_and_userscore import get_data
 
 
 class TestPriceAndUserscore(unittest.TestCase):
